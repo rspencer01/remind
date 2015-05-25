@@ -1,0 +1,49 @@
+#!/usr/bin/python
+import sys,os
+from argDec import *
+
+PATH = os.path.expanduser('~')+'/.remind'
+if not os.path.exists(PATH):
+  os.makedirs(PATH)
+TODOPATH = PATH+'/toDo' 
+DONEPATH = PATH+'/done' 
+if not os.path.exists(TODOPATH):
+  open(TODOPATH,'w').close()
+if not os.path.exists(DONEPATH):
+  open(DONEPATH,'w').close()
+
+def addMessage(m):
+  open(TODOPATH,'a').write(m+'\n')
+
+def removeMessage(n):
+  a = open(TODOPATH).readlines()
+  removed = a[n]
+  if n>0:
+    a = a[:n-1] + a[n+1:]
+  else:
+    a = a[1:]
+  f = open(TODOPATH,'w')
+  for i in a:
+    f.write(i)
+  f.close()
+  f = open(DONEPATH,'a')
+  f.write(removed)
+  f.close()
+
+
+if len(sys.argv)==1:
+  a = open(TODOPATH).readlines()
+  if (len(a)):
+    print "Reminders"
+    print "========="
+    for i,m in enumerate(a):
+      print '('+str(i)+') '+m.rstrip()
+    print
+    print "Run `remind -r n` to remove reminder number n"
+  sys.exit(0)
+
+args = argDec(sys.argv)
+if 'a' in args:
+  addMessage(args['a'])
+if 'r' in args:
+  removeMessage(int(args['r']))
