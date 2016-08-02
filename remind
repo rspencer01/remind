@@ -1,6 +1,6 @@
 #!/usr/bin/python
 import sys,os
-from argDec import *
+import argparse
 
 PATH = os.path.expanduser('~')+'/.remind'
 if not os.path.exists(PATH):
@@ -30,8 +30,12 @@ def removeMessage(n):
   f.write(removed)
   f.close()
 
+parser = argparse.ArgumentParser()
+parser.add_argument('--add', default=None)
+parser.add_argument('--remove', default=None, type=int)
+arguments = parser.parse_args()
 
-if len(sys.argv)==1:
+if arguments.add == None and  arguments.remove == None:
   a = open(TODOPATH).readlines()
   if (len(a)):
     print "Reminders"
@@ -42,8 +46,7 @@ if len(sys.argv)==1:
     print "Run `remind -r n` to remove reminder number n"
   sys.exit(0)
 
-args = argDec(sys.argv)
-if 'a' in args:
-  addMessage(args['a'])
-if 'r' in args:
-  removeMessage(int(args['r']))
+if arguments.add != None:
+  addMessage(arguments.add)
+if arguments.remove != None:
+  removeMessage(arguments.remove)
